@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a1128">
+<title>نبض الحياة</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#0a1128; --card:#ffffff; --ink:#1b2236; --muted:#8a91a3;
+  --red:#8b1a1a; --red-soft:#fde8e8; --teal:#0f5e4d; --mint:#d9f7f3; --line:#d9dce4;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:"Tajawal","Segoe UI",Tahoma,system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  padding-top:env(safe-area-inset-top);
+}
+.app{max-width:520px;margin:0 auto;min-height:100%;padding:16px 14px 96px}
+header{display:flex;align-items:center;justify-content:space-between;color:#fff;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo,.me{width:46px;height:46px;border-radius:50%;background:#fde8e6;display:grid;place-items:center}
+.brand small{display:block;color:#e0707a;font-size:11px}
+.brand b{font-size:17px}
+.hbtns{display:flex;align-items:center;gap:10px}
+.bell{position:relative;background:none;border:0;color:#fff;font-size:20px}
+.bell i{position:absolute;top:0;right:-2px;width:8px;height:8px;background:#ff4d4d;border-radius:50%}
+
+.card{background:var(--card);border-radius:22px;padding:14px;margin-bottom:14px}
+.map{position:relative;height:250px;padding:0;overflow:hidden;background:#eef2f6}
+.map svg{width:100%;height:100%;display:block}
+.pin{position:absolute;transform:translate(50%,-100%);text-align:center;border:0;background:none;cursor:pointer}
+.pin .dot{width:34px;height:34px;border-radius:50%;margin:0 auto;display:grid;place-items:center;color:#fff;font-weight:700;border:3px solid #fff;box-shadow:0 2px 6px #0003}
+.pin.red .dot{background:#c0262d}.pin.green .dot{background:#0f5e4d}
+.pin span{display:block;margin-top:3px;background:#1b2236;color:#fff;font-size:11px;padding:3px 8px;border-radius:7px}
+.note{position:absolute;bottom:10px;left:10px;right:56px;background:#fff;border-radius:20px;font-size:11px;padding:7px 12px;box-shadow:0 1px 4px #0002;display:flex;align-items:center;gap:6px}
+.note::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal)}
+
+.row{display:flex;gap:10px;align-items:center}
+.search{flex:1;height:48px;border:1.5px solid var(--line);border-radius:16px;padding:0 14px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
+.search:focus,select:focus{outline:2px solid var(--red);outline-offset:1px}
+select{height:48px;border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--ink)}
+.chips{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
+.chip{flex:0 0 auto;min-width:64px;height:36px;border-radius:18px;border:1.5px solid var(--line);background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.chip.on{background:var(--red);border-color:var(--red);color:#fff}
+
+.center-head{display:flex;gap:12px;align-items:flex-start}
+.cross{width:52px;height:52px;border-radius:50%;background:var(--red-soft);display:grid;place-items:center;flex:none}
+.cross svg{width:24px;height:24px}
+.tags{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.tag{background:var(--red-soft);color:var(--red);font-size:12px;font-weight:700;padding:2px 10px;border-radius:8px}
+.ok{color:var(--teal);font-size:12px;font-weight:700}
+.hours{margin-inline-start:auto;background:var(--mint);color:#0b6b66;font-size:12px;font-weight:800;padding:4px 10px;border-radius:12px}
+.name{font-size:17px;font-weight:800}
+.addr{color:var(--muted);font-size:13px;margin-top:2px}
+.stock{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 12px;font-size:12px;color:var(--ink)}
+.stock em{margin-inline-start:auto;color:var(--red);font-style:normal;font-size:11px}
+.bt{font-weight:800;font-size:13px;padding:6px 10px;border-radius:8px;background:#e8f1fb;color:#1b2236}
+.bt.low{background:var(--red);color:#fff}
+.btns{display:flex;gap:10px}
+.btn{flex:1;height:48px;border-radius:24px;border:0;font:inherit;font-weight:800;font-size:14px;text-decoration:none;display:grid;place-items:center;cursor:pointer}
+.call{background:var(--red);color:#fff}
+.dir{background:#eaf4fb;color:#1b2236;flex:.9}
+.empty{background:#fff;border-radius:22px;padding:28px;text-align:center;color:var(--muted)}
+
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:10px 6px calc(10px + env(safe-area-inset-bottom));display:flex;max-width:520px;margin:0 auto}
+nav button{flex:1;background:none;border:0;font:inherit;font-size:11px;color:#8a91a3;display:grid;gap:3px;justify-items:center;cursor:pointer}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+nav button.on{color:var(--red);font-weight:800}
+#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:#1b2236;color:#fff;padding:10px 18px;border-radius:18px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2C12 2 5 10 5 15a7 7 0 0014 0c0-5-7-13-7-13z" fill="#8b1a1a"/></svg></div>
+      <div><small>نبض الحياة - بنك الدم</small><b>شبكة التبرع والاستغاثة</b></div>
+    </div>
+    <div class="hbtns">
+      <button class="bell" aria-label="الإشعارات" onclick="toast('لا توجد إشعارات جديدة')">🔔<i></i></button>
+      <div class="me" aria-hidden="true">👤</div>
+    </div>
+  </header>
+
+  <section class="card map" aria-label="خريطة المراكز">
+    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="400" height="250" fill="#eef2f6"/>
+      <path d="M150 0 C170 60 120 110 150 170 S130 230 140 250" stroke="#9fd0f5" stroke-width="3" fill="none"/>
+      <path d="M270 0 C290 60 310 100 340 160" stroke="#9fd0f5" stroke-width="3" fill="none"/>
+      <path d="M0 190 L400 120" stroke="#dde3ea" stroke-width="6"/>
+      <path d="M60 0 L220 250" stroke="#e5e9ef" stroke-width="5"/>
+    </svg>
+    <button class="pin red" style="left:20%;top:36%" onclick="pickState('البحر الأحمر')"><div class="dot">+</div><span>بورتسودان</span></button>
+    <button class="pin green" style="left:55%;top:55%" onclick="pickState('الخرطوم')"><div class="dot">+</div><span>الخرطوم</span></button>
+    <button class="pin green" style="left:61%;top:78%" onclick="pickState('الجزيرة')"><div class="dot">+</div><span>ود مدني</span></button>
+    <div class="note">محدث ميدانياً عبر المتطوعين</div>
+  </section>
+
+  <section class="card" aria-label="بحث">
+    <div class="row">
+      <input id="q" class="search" type="search" placeholder="ابحث عن مركز أو حي" aria-label="بحث">
+      <select id="state" aria-label="الولاية">
+        <option value="">كافة الولايات</option>
+        <option>البحر الأحمر</option>
+        <option>الخرطوم</option>
+        <option>الجزيرة</option>
+      </select>
+    </div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <div id="list"></div>
+</div>
+
+<nav aria-label="التنقل الرئيسي">
+  <button onclick="tab(this,'الرئيسية')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>الرئيسية</button>
+  <button onclick="tab(this,'التبرع والأهلية')"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.500-7 10-7 10z"/></svg>التبرع والأهلية</button>
+  <button onclick="tab(this,'طلب دم')"><svg viewBox="0 0 24 24"><path d="M12 3c0 0-6 7-6 11a6 6 0 0012 0c0-4-6-11-6-11z"/></svg>طلب دم</button>
+  <button class="on" onclick="tab(this,'خريطة المراكز')"><svg viewBox="0 0 24 24"><path d="M12 22s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>خريطة المراكز</button>
+  <button onclick="tab(this,'بطاقة المتبرع')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 11h3M8 15h6"/></svg>بطاقة المتبرع</button>
+</nav>
+<div id="toast" role="status"></div>
+
+<script>
+/* بيانات تجريبية: عدّل الأسماء والأرقام والمخزون حسب الواقع */
+const CENTERS = [
+  {name:"بنك الدم الإقليمي المركزي", state:"البحر الأحمر", city:"بورتسودان", addr:"حي المستشفى، شارع الميناء", phone:"0000000000", h24:true,  verified:true, updated:"آخر بلاغ", stock:{"O-":"low","A+":"ok","B+":"ok","AB+":"ok"}},
+  {name:"مركز الخرطوم لنقل الدم",    state:"الخرطوم",      city:"الخرطوم",   addr:"وسط الخرطوم",              phone:"0000000000", h24:false, verified:true, updated:"آخر بلاغ", stock:{"A+":"ok","O+":"ok","B-":"low"}},
+  {name:"بنك دم مستشفى ود مدني",     state:"الجزيرة",      city:"ود مدني",   addr:"المستشفى التعليمي",         phone:"0000000000", h24:true,  verified:true, updated:"آخر بلاغ", stock:{"O+":"ok","A-":"low","AB+":"ok"}}
+];
+const TYPES = ["الكل","O-","O+","A+","A-","B+","B-","AB+","AB-"];
+let type = "الكل";
+
+const $ = id => document.getElementById(id);
+const chips = $("chips");
+TYPES.forEach(t => {
+  const b = document.createElement("button");
+  b.className = "chip" + (t === type ? " on" : "");
+  b.textContent = t;
+  b.onclick = () => { type = t; [...chips.children].forEach(c => c.classList.toggle("on", c === b)); render(); };
+  chips.appendChild(b);
+});
+
+function render(){
+  const q = $("q").value.trim(), st = $("state").value;
+  const rows = CENTERS.filter(c =>
+    (!st || c.state === st) &&
+    (!q || (c.name + c.addr + c.city).includes(q)) &&
+    (type === "الكل" || type in c.stock)
+  );
+  $("list").innerHTML = rows.length ? rows.map(card).join("") :
+    '<div class="empty">لا توجد مراكز مطابقة. جرّب فصيلة أخرى أو ولاية أخرى.</div>';
+}
+
+function card(c){
+  const bts = Object.entries(c.stock).map(([k,v]) => `<span class="bt ${v==="low"?"low":""}">${k}</span>`).join("");
+  const map = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(c.name + " " + c.city);
+  return `<article class="card">
+    <div class="center-head">
+      <div class="cross"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="18" rx="1.5" fill="#c0262d"/><rect x="3" y="9" width="18" height="6" rx="1.5" fill="#c0262d"/></svg></div>
+      <div style="flex:1">
+        <div class="tags"><span class="tag">${c.city}</span>${c.verified?'<span class="ok">✔ موثق</span>':''}${c.h24?'<span class="hours">● 24 ساعة</span>':''}</div>
+        <div class="name">${c.name}</div>
+        <div class="addr">${c.addr}</div>
+      </div>
+    </div>
+    <div class="stock"><span>الفصائل والصفائح المسجلة حالياً بالمرفق:</span><em>${c.updated}</em></div>
+    <div class="stock" style="margin-top:0">${bts}</div>
+    <div class="btns">
+      <a class="btn call" href="tel:${c.phone}">📞 اتصال بالطوارئ</a>
+      <a class="btn dir" href="${map}" target="_blank" rel="noopener">توجيه المسار</a>
+    </div>
+  </article>`;
+}
+
+function pickState(s){ $("state").value = s; render(); window.scrollTo({top:document.body.scrollHeight*0.3,behavior:"smooth"}); }
+function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),1800); }
+function tab(el,name){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b===el));
+  if(name!=="خريطة المراكز") toast("صفحة «"+name+"» قيد التطوير");
+}
+$("q").addEventListener("input", render);
+$("state").addEventListener("change", render);
+render();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
