@@ -9,40 +9,42 @@
 <link rel="icon" href="icon-192.png">
 <style>
 :root{
-  --bg:#0a1128; --card:#ffffff; --ink:#1b2236; --muted:#8a91a3;
-  --red:#8b1a1a; --red-soft:#fde8e8; --teal:#0f5e4d; --mint:#d9f7f3; --line:#d9dce4;
+  --bg:#0a1128; --card:#ffffff; --ink:#1b2236; --muted:#6f768a;
+  --red:#8b1a1a; --red2:#c0262d; --red-soft:#fde8e8; --teal:#0f5e4d; --mint:#d9f7f3; --line:#d9dce4;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{
-  font-family:"Tajawal","Segoe UI",Tahoma,system-ui,sans-serif;
-  background:var(--bg);color:var(--ink);
-  padding-top:env(safe-area-inset-top);
-}
-.app{max-width:520px;margin:0 auto;min-height:100%;padding:16px 14px 96px}
+body{font-family:"Tajawal","Segoe UI",Tahoma,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-top:env(safe-area-inset-top)}
+.app{max-width:520px;margin:0 auto;min-height:100%;padding:16px 14px 100px}
 header{display:flex;align-items:center;justify-content:space-between;color:#fff;margin-bottom:14px}
 .brand{display:flex;align-items:center;gap:10px}
-.logo,.me{width:46px;height:46px;border-radius:50%;background:#fde8e6;display:grid;place-items:center}
+.logo,.me{width:46px;height:46px;border-radius:50%;background:#fde8e6;display:grid;place-items:center;font-size:20px}
 .brand small{display:block;color:#e0707a;font-size:11px}
 .brand b{font-size:17px}
 .hbtns{display:flex;align-items:center;gap:10px}
-.bell{position:relative;background:none;border:0;color:#fff;font-size:20px}
+.bell{position:relative;background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
 .bell i{position:absolute;top:0;right:-2px;width:8px;height:8px;background:#ff4d4d;border-radius:50%}
 
+.view{display:none}.view.on{display:block}
+h2{color:#fff;font-size:20px;margin:4px 2px 12px}
 .card{background:var(--card);border-radius:22px;padding:14px;margin-bottom:14px}
+.hint{color:var(--muted);font-size:13px;line-height:1.7}
+
+/* خريطة */
 .map{position:relative;height:250px;padding:0;overflow:hidden;background:#eef2f6}
 .map svg{width:100%;height:100%;display:block}
 .pin{position:absolute;transform:translate(50%,-100%);text-align:center;border:0;background:none;cursor:pointer}
 .pin .dot{width:34px;height:34px;border-radius:50%;margin:0 auto;display:grid;place-items:center;color:#fff;font-weight:700;border:3px solid #fff;box-shadow:0 2px 6px #0003}
-.pin.red .dot{background:#c0262d}.pin.green .dot{background:#0f5e4d}
+.pin.red .dot{background:var(--red2)}.pin.green .dot{background:var(--teal)}
 .pin span{display:block;margin-top:3px;background:#1b2236;color:#fff;font-size:11px;padding:3px 8px;border-radius:7px}
-.note{position:absolute;bottom:10px;left:10px;right:56px;background:#fff;border-radius:20px;font-size:11px;padding:7px 12px;box-shadow:0 1px 4px #0002;display:flex;align-items:center;gap:6px}
+.note{position:absolute;bottom:10px;left:10px;right:10px;background:#fff;border-radius:20px;font-size:11px;padding:7px 12px;box-shadow:0 1px 4px #0002;display:flex;align-items:center;gap:6px}
 .note::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal)}
 
 .row{display:flex;gap:10px;align-items:center}
-.search{flex:1;height:48px;border:1.5px solid var(--line);border-radius:16px;padding:0 14px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
-.search:focus,select:focus{outline:2px solid var(--red);outline-offset:1px}
-select{height:48px;border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--ink)}
+input,select,textarea{font:inherit;color:var(--ink)}
+.search{flex:1;height:48px;border:1.5px solid var(--line);border-radius:16px;padding:0 14px;font-size:15px;background:#fff}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-offset:1px}
+.state-sel{height:48px;border:0;background:none;font-size:13px;font-weight:600}
 .chips{display:flex;gap:8px;margin-top:12px;overflow-x:auto;padding-bottom:2px}
 .chip{flex:0 0 auto;min-width:64px;height:36px;border-radius:18px;border:1.5px solid var(--line);background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
 .chip.on{background:var(--red);border-color:var(--red);color:#fff}
@@ -56,21 +58,66 @@ select{height:48px;border:0;background:none;font:inherit;font-size:13px;font-wei
 .hours{margin-inline-start:auto;background:var(--mint);color:#0b6b66;font-size:12px;font-weight:800;padding:4px 10px;border-radius:12px}
 .name{font-size:17px;font-weight:800}
 .addr{color:var(--muted);font-size:13px;margin-top:2px}
-.stock{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 12px;font-size:12px;color:var(--ink)}
+.stock{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 12px;font-size:12px}
 .stock em{margin-inline-start:auto;color:var(--red);font-style:normal;font-size:11px}
-.bt{font-weight:800;font-size:13px;padding:6px 10px;border-radius:8px;background:#e8f1fb;color:#1b2236}
+.bt{font-weight:800;font-size:13px;padding:6px 10px;border-radius:8px;background:#e8f1fb}
 .bt.low{background:var(--red);color:#fff}
 .btns{display:flex;gap:10px}
-.btn{flex:1;height:48px;border-radius:24px;border:0;font:inherit;font-weight:800;font-size:14px;text-decoration:none;display:grid;place-items:center;cursor:pointer}
-.call{background:var(--red);color:#fff}
-.dir{background:#eaf4fb;color:#1b2236;flex:.9}
+.btn{flex:1;height:48px;border-radius:24px;border:0;font:inherit;font-weight:800;font-size:14px;text-decoration:none;display:grid;place-items:center;cursor:pointer;color:var(--ink);background:#eaf4fb}
+.btn.main,.call{background:var(--red);color:#fff}
+.btn.ghost{background:#f0f1f5}
+.btn.danger{background:#fff;color:var(--red2);border:1.5px solid var(--red2)}
 .empty{background:#fff;border-radius:22px;padding:28px;text-align:center;color:var(--muted)}
+
+/* نماذج */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;height:46px;border:1.5px solid var(--line);border-radius:14px;padding:0 12px;font-size:15px;background:#fff}
+.field textarea{height:80px;padding:10px 12px;resize:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.err{color:var(--red2);font-size:12px;margin-top:4px;min-height:0}
+.result{border-radius:16px;padding:14px;margin-top:12px;font-size:14px;line-height:1.8}
+.result.good{background:var(--mint);color:#0b4d47}
+.result.bad{background:var(--red-soft);color:#7a1414}
+.result ul{padding-inline-start:20px;margin-top:6px}
+
+/* الرئيسية */
+.hero{background:linear-gradient(135deg,#8b1a1a,#c0262d);color:#fff;border-radius:22px;padding:18px;margin-bottom:14px}
+.hero h3{font-size:19px;margin-bottom:6px}
+.hero p{font-size:13px;opacity:.92;line-height:1.7}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:#fff;border-radius:18px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-size:22px;color:var(--red)}
+.stat span{font-size:11px;color:var(--muted)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.quick button{background:#fff;border:0;border-radius:18px;padding:14px 8px;font:inherit;font-weight:800;font-size:13px;cursor:pointer;color:var(--ink)}
+.quick button span{display:block;font-size:24px;margin-bottom:4px}
+
+/* طلبات الدم */
+.req{border-inline-start:5px solid var(--red2)}
+.req.mid{border-color:#e0a030}.req.low{border-color:var(--teal)}
+.req-top{display:flex;align-items:center;gap:12px}
+.bigbt{width:56px;height:56px;border-radius:16px;background:var(--red);color:#fff;font-weight:900;font-size:19px;display:grid;place-items:center;flex:none}
+.req small{color:var(--muted);font-size:12px}
+.req .btns{margin-top:12px}
+.req .btn{height:42px;font-size:13px}
+
+/* بطاقة المتبرع */
+.dcard{background:linear-gradient(135deg,#0f1b3d,#1d2f66);color:#fff;border-radius:22px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.dcard::after{content:"";position:absolute;top:-40px;left:-40px;width:140px;height:140px;border-radius:50%;background:#c0262d33}
+.dcard .top{display:flex;justify-content:space-between;align-items:flex-start}
+.dcard .bt-big{font-size:46px;font-weight:900;color:#ff6b72;line-height:1}
+.dcard h3{font-size:19px;margin:10px 0 2px}
+.dcard .line{font-size:13px;opacity:.9;margin-top:4px}
+.dcard .id{font-size:11px;opacity:.7;letter-spacing:1px}
+.badge{display:inline-block;margin-top:12px;padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800}
+.badge.yes{background:#1fb58f;color:#04382c}.badge.no{background:#ffd9a8;color:#5a3300}
 
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:10px 6px calc(10px + env(safe-area-inset-bottom));display:flex;max-width:520px;margin:0 auto}
 nav button{flex:1;background:none;border:0;font:inherit;font-size:11px;color:#8a91a3;display:grid;gap:3px;justify-items:center;cursor:pointer}
 nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
 nav button.on{color:var(--red);font-weight:800}
-#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:#1b2236;color:#fff;padding:10px 18px;border-radius:18px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1b2236;color:#fff;padding:10px 18px;border-radius:18px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
 #toast.show{opacity:1}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
 </style>
@@ -84,110 +131,310 @@ nav button.on{color:var(--red);font-weight:800}
     </div>
     <div class="hbtns">
       <button class="bell" aria-label="الإشعارات" onclick="toast('لا توجد إشعارات جديدة')">🔔<i></i></button>
-      <div class="me" aria-hidden="true">👤</div>
+      <button class="me" aria-label="بطاقتي" onclick="show('card')">👤</button>
     </div>
   </header>
 
-  <section class="card map" aria-label="خريطة المراكز">
-    <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <rect width="400" height="250" fill="#eef2f6"/>
-      <path d="M150 0 C170 60 120 110 150 170 S130 230 140 250" stroke="#9fd0f5" stroke-width="3" fill="none"/>
-      <path d="M270 0 C290 60 310 100 340 160" stroke="#9fd0f5" stroke-width="3" fill="none"/>
-      <path d="M0 190 L400 120" stroke="#dde3ea" stroke-width="6"/>
-      <path d="M60 0 L220 250" stroke="#e5e9ef" stroke-width="5"/>
-    </svg>
-    <button class="pin red" style="left:20%;top:36%" onclick="pickState('البحر الأحمر')"><div class="dot">+</div><span>بورتسودان</span></button>
-    <button class="pin green" style="left:55%;top:55%" onclick="pickState('الخرطوم')"><div class="dot">+</div><span>الخرطوم</span></button>
-    <button class="pin green" style="left:61%;top:78%" onclick="pickState('الجزيرة')"><div class="dot">+</div><span>ود مدني</span></button>
-    <div class="note">محدث ميدانياً عبر المتطوعين</div>
-  </section>
-
-  <section class="card" aria-label="بحث">
-    <div class="row">
-      <input id="q" class="search" type="search" placeholder="ابحث عن مركز أو حي" aria-label="بحث">
-      <select id="state" aria-label="الولاية">
-        <option value="">كافة الولايات</option>
-        <option>البحر الأحمر</option>
-        <option>الخرطوم</option>
-        <option>الجزيرة</option>
-      </select>
+  <!-- ===== الرئيسية ===== -->
+  <section class="view" data-view="home">
+    <div class="hero">
+      <h3 id="hello">أهلاً بك في نبض الحياة</h3>
+      <p>تبرعك بالدم قد ينقذ ثلاث حيوات. اعرف أقرب مركز، وتحقق من أهليتك، أو أنشئ طلب دم عاجل.</p>
     </div>
-    <div class="chips" id="chips"></div>
+    <div class="stats">
+      <div class="stat"><b id="s-centers">0</b><span>مركز</span></div>
+      <div class="stat"><b id="s-reqs">0</b><span>طلب مفتوح</span></div>
+      <div class="stat"><b id="s-urgent">0</b><span>طلب عاجل</span></div>
+    </div>
+    <div class="quick">
+      <button onclick="show('request')"><span>🩸</span>اطلب دماً</button>
+      <button onclick="show('donate')"><span>✅</span>افحص أهليتك</button>
+      <button onclick="show('map')"><span>📍</span>أقرب مركز</button>
+      <button onclick="show('card')"><span>🪪</span>بطاقتي</button>
+    </div>
+    <h2>أحدث الطلبات</h2>
+    <div id="home-reqs"></div>
   </section>
 
-  <div id="list"></div>
+  <!-- ===== التبرع والأهلية ===== -->
+  <section class="view" data-view="donate">
+    <h2>هل أنت مؤهل للتبرع؟</h2>
+    <div class="card">
+      <p class="hint" style="margin-bottom:12px">أجب عن الأسئلة التالية، وستظهر النتيجة فوراً. القرار النهائي دائماً للفريق الطبي في المركز.</p>
+      <div class="two">
+        <div class="field"><label for="e-age">العمر (سنة)</label><input id="e-age" type="number" inputmode="numeric" min="1" max="99"></div>
+        <div class="field"><label for="e-weight">الوزن (كجم)</label><input id="e-weight" type="number" inputmode="numeric" min="1" max="250"></div>
+      </div>
+      <div class="field"><label for="e-last">آخر تبرع بالدم</label>
+        <select id="e-last">
+          <option value="never">لم أتبرع من قبل</option>
+          <option value="old">قبل 3 أشهر أو أكثر</option>
+          <option value="recent">خلال آخر 3 أشهر</option>
+        </select></div>
+      <div class="field"><label for="e-well">هل تشعر بصحة جيدة اليوم (بدون حمى أو زكام أو إسهال)؟</label>
+        <select id="e-well"><option value="yes">نعم</option><option value="no">لا</option></select></div>
+      <div class="field"><label for="e-dis">هل لديك التهاب كبدي أو إيدز أو مرض مزمن غير مستقر؟</label>
+        <select id="e-dis"><option value="no">لا</option><option value="yes">نعم</option></select></div>
+      <div class="field"><label for="e-preg">هل أنتِ حامل أو مرضعة؟ (للنساء فقط)</label>
+        <select id="e-preg"><option value="na">لا ينطبق</option><option value="no">لا</option><option value="yes">نعم</option></select></div>
+      <button class="btn main" style="width:100%" onclick="checkElig()">افحص الأهلية</button>
+      <div id="elig-out"></div>
+    </div>
+  </section>
+
+  <!-- ===== طلب دم ===== -->
+  <section class="view" data-view="request">
+    <h2>طلب دم</h2>
+    <div class="card">
+      <div class="field"><label for="r-name">اسم المريض</label><input id="r-name" type="text" maxlength="60"></div>
+      <div class="two">
+        <div class="field"><label for="r-bt">الفصيلة المطلوبة</label><select id="r-bt"></select></div>
+        <div class="field"><label for="r-units">عدد الوحدات</label><input id="r-units" type="number" inputmode="numeric" min="1" max="20" value="1"></div>
+      </div>
+      <div class="field"><label for="r-hosp">المستشفى</label><input id="r-hosp" type="text" maxlength="80"></div>
+      <div class="two">
+        <div class="field"><label for="r-state">الولاية</label><select id="r-state"></select></div>
+        <div class="field"><label for="r-urg">درجة الاستعجال</label>
+          <select id="r-urg"><option value="high">عاجل جداً</option><option value="mid">خلال يوم</option><option value="low">عادي</option></select></div>
+      </div>
+      <div class="field"><label for="r-phone">رقم التواصل</label><input id="r-phone" type="tel" inputmode="tel" placeholder="09xxxxxxxx"></div>
+      <div class="field"><label for="r-note">ملاحظات (اختياري)</label><textarea id="r-note" maxlength="200"></textarea></div>
+      <div class="err" id="r-err"></div>
+      <button class="btn main" style="width:100%" onclick="saveReq()">نشر الطلب</button>
+    </div>
+    <h2>طلباتي على هذا الجهاز</h2>
+    <div id="req-list"></div>
+  </section>
+
+  <!-- ===== خريطة المراكز ===== -->
+  <section class="view" data-view="map">
+    <div class="card map" aria-label="خريطة المراكز">
+      <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="400" height="250" fill="#eef2f6"/>
+        <path d="M150 0 C170 60 120 110 150 170 S130 230 140 250" stroke="#9fd0f5" stroke-width="3" fill="none"/>
+        <path d="M270 0 C290 60 310 100 340 160" stroke="#9fd0f5" stroke-width="3" fill="none"/>
+        <path d="M0 190 L400 120" stroke="#dde3ea" stroke-width="6"/>
+        <path d="M60 0 L220 250" stroke="#e5e9ef" stroke-width="5"/>
+      </svg>
+      <button class="pin red" style="left:20%;top:36%" onclick="pickState('البحر الأحمر')"><div class="dot">+</div><span>بورتسودان</span></button>
+      <button class="pin green" style="left:55%;top:55%" onclick="pickState('الخرطوم')"><div class="dot">+</div><span>الخرطوم</span></button>
+      <button class="pin green" style="left:61%;top:78%" onclick="pickState('الجزيرة')"><div class="dot">+</div><span>ود مدني</span></button>
+      <div class="note">محدث ميدانياً عبر المتطوعين</div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <input id="q" class="search" type="search" placeholder="ابحث عن مركز أو حي" aria-label="بحث">
+        <select id="state" class="state-sel" aria-label="الولاية"></select>
+      </div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <!-- ===== بطاقة المتبرع ===== -->
+  <section class="view" data-view="card">
+    <h2>بطاقة المتبرع</h2>
+    <div id="card-show"></div>
+    <div class="card" id="card-form">
+      <p class="hint" style="margin-bottom:12px">سجّل بياناتك لتحصل على بطاقتك. تُحفظ البيانات على هذا الجهاز فقط.</p>
+      <div class="field"><label for="d-name">الاسم الكامل</label><input id="d-name" type="text" maxlength="60"></div>
+      <div class="two">
+        <div class="field"><label for="d-bt">فصيلة الدم</label><select id="d-bt"></select></div>
+        <div class="field"><label for="d-state">الولاية</label><select id="d-state"></select></div>
+      </div>
+      <div class="field"><label for="d-phone">رقم الهاتف</label><input id="d-phone" type="tel" inputmode="tel" placeholder="09xxxxxxxx"></div>
+      <div class="field"><label for="d-last">تاريخ آخر تبرع (اتركه فارغاً إن لم تتبرع)</label><input id="d-last" type="date"></div>
+      <div class="err" id="d-err"></div>
+      <button class="btn main" style="width:100%" onclick="saveDonor()">حفظ البطاقة</button>
+    </div>
+  </section>
 </div>
 
 <nav aria-label="التنقل الرئيسي">
-  <button onclick="tab(this,'الرئيسية')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>الرئيسية</button>
-  <button onclick="tab(this,'التبرع والأهلية')"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.500-7 10-7 10z"/></svg>التبرع والأهلية</button>
-  <button onclick="tab(this,'طلب دم')"><svg viewBox="0 0 24 24"><path d="M12 3c0 0-6 7-6 11a6 6 0 0012 0c0-4-6-11-6-11z"/></svg>طلب دم</button>
-  <button class="on" onclick="tab(this,'خريطة المراكز')"><svg viewBox="0 0 24 24"><path d="M12 22s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>خريطة المراكز</button>
-  <button onclick="tab(this,'بطاقة المتبرع')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 11h3M8 15h6"/></svg>بطاقة المتبرع</button>
+  <button data-tab="home" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>الرئيسية</button>
+  <button data-tab="donate" onclick="show('donate')"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg>التبرع والأهلية</button>
+  <button data-tab="request" onclick="show('request')"><svg viewBox="0 0 24 24"><path d="M12 3c0 0-6 7-6 11a6 6 0 0012 0c0-4-6-11-6-11z"/></svg>طلب دم</button>
+  <button data-tab="map" onclick="show('map')"><svg viewBox="0 0 24 24"><path d="M12 22s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>خريطة المراكز</button>
+  <button data-tab="card" onclick="show('card')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 11h3M8 15h6"/></svg>بطاقة المتبرع</button>
 </nav>
 <div id="toast" role="status"></div>
 
 <script>
-/* بيانات تجريبية: عدّل الأسماء والأرقام والمخزون حسب الواقع */
+/* ============ بيانات ثابتة (عدّلها حسب الواقع) ============ */
+const STATES = ["البحر الأحمر","الخرطوم","الجزيرة","كسلا","القضارف","نهر النيل","الشمالية","سنار","النيل الأبيض","النيل الأزرق","شمال كردفان","جنوب كردفان","غرب كردفان","شمال دارفور","جنوب دارفور","وسط دارفور","شرق دارفور","غرب دارفور"];
+const BT = ["O-","O+","A+","A-","B+","B-","AB+","AB-"];
 const CENTERS = [
   {name:"بنك الدم الإقليمي المركزي", state:"البحر الأحمر", city:"بورتسودان", addr:"حي المستشفى، شارع الميناء", phone:"0000000000", h24:true,  verified:true, updated:"آخر بلاغ", stock:{"O-":"low","A+":"ok","B+":"ok","AB+":"ok"}},
   {name:"مركز الخرطوم لنقل الدم",    state:"الخرطوم",      city:"الخرطوم",   addr:"وسط الخرطوم",              phone:"0000000000", h24:false, verified:true, updated:"آخر بلاغ", stock:{"A+":"ok","O+":"ok","B-":"low"}},
   {name:"بنك دم مستشفى ود مدني",     state:"الجزيرة",      city:"ود مدني",   addr:"المستشفى التعليمي",         phone:"0000000000", h24:true,  verified:true, updated:"آخر بلاغ", stock:{"O+":"ok","A-":"low","AB+":"ok"}}
 ];
-const TYPES = ["الكل","O-","O+","A+","A-","B+","B-","AB+","AB-"];
-let type = "الكل";
 
+/* ============ أدوات ============ */
 const $ = id => document.getElementById(id);
-const chips = $("chips");
-TYPES.forEach(t => {
-  const b = document.createElement("button");
-  b.className = "chip" + (t === type ? " on" : "");
-  b.textContent = t;
-  b.onclick = () => { type = t; [...chips.children].forEach(c => c.classList.toggle("on", c === b)); render(); };
-  chips.appendChild(b);
-});
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch(e){ return d; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){ toast("تعذر الحفظ على هذا الجهاز"); } };
+const phoneOk = p => /^(\+249|00249|0)?[19]\d{8}$/.test(p.replace(/[\s-]/g,""));
+function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2000); }
+function fill(sel, arr, first){ $(sel).innerHTML = (first?`<option value="">${first}</option>`:"") + arr.map(x=>`<option>${x}</option>`).join(""); }
+const fmt = d => d.toISOString().slice(0,10);
 
-function render(){
-  const q = $("q").value.trim(), st = $("state").value;
-  const rows = CENTERS.filter(c =>
-    (!st || c.state === st) &&
-    (!q || (c.name + c.addr + c.city).includes(q)) &&
-    (type === "الكل" || type in c.stock)
-  );
-  $("list").innerHTML = rows.length ? rows.map(card).join("") :
-    '<div class="empty">لا توجد مراكز مطابقة. جرّب فصيلة أخرى أو ولاية أخرى.</div>';
+/* ============ التنقل ============ */
+function show(name){
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("on", v.dataset.view === name));
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.tab === name));
+  if(name==="home") renderHome();
+  if(name==="request") renderReqs();
+  if(name==="map") renderCenters();
+  if(name==="card") renderCard();
+  window.scrollTo({top:0});
 }
 
-function card(c){
-  const bts = Object.entries(c.stock).map(([k,v]) => `<span class="bt ${v==="low"?"low":""}">${k}</span>`).join("");
-  const map = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(c.name + " " + c.city);
+/* ============ الرئيسية ============ */
+function reqCard(r, own){
+  const label = {high:"عاجل جداً",mid:"خلال يوم",low:"عادي"}[r.urg];
+  return `<article class="card req ${r.urg==="high"?"":r.urg}">
+    <div class="req-top">
+      <div class="bigbt">${esc(r.bt)}</div>
+      <div style="flex:1">
+        <div class="name">${esc(r.name)}</div>
+        <small>${esc(r.hosp)} - ${esc(r.state)}</small><br>
+        <small>${r.units} وحدة - ${label} - ${esc(r.date)}</small>
+        ${r.note?`<div class="addr">${esc(r.note)}</div>`:""}
+      </div>
+    </div>
+    <div class="btns">
+      <a class="btn call" href="tel:${esc(r.phone)}">📞 اتصال</a>
+      ${own?`<button class="btn danger" onclick="delReq(${r.id})">حذف</button>`:""}
+    </div>
+  </article>`;
+}
+function renderHome(){
+  const d = load("ld_donor", null), reqs = load("ld_reqs", []);
+  $("hello").textContent = d ? "أهلاً " + d.name.split(" ")[0] + "، شكراً لانضمامك" : "أهلاً بك في نبض الحياة";
+  $("s-centers").textContent = CENTERS.length;
+  $("s-reqs").textContent = reqs.length;
+  $("s-urgent").textContent = reqs.filter(r=>r.urg==="high").length;
+  $("home-reqs").innerHTML = reqs.length ? reqs.slice(0,3).map(r=>reqCard(r,false)).join("") :
+    '<div class="empty">لا توجد طلبات حالياً. يمكنك إنشاء طلب من تبويب «طلب دم».</div>';
+}
+
+/* ============ الأهلية ============ */
+function checkElig(){
+  const age=+$("e-age").value, w=+$("e-weight").value, last=$("e-last").value;
+  const why=[];
+  if(!age||!w){ toast("أدخل العمر والوزن أولاً"); return; }
+  if(age<18) why.push("العمر أقل من 18 سنة.");
+  if(age>65) why.push("العمر أكبر من 65 سنة، ويلزم تقييم طبي خاص.");
+  if(w<50) why.push("الوزن أقل من 50 كجم.");
+  if(last==="recent") why.push("مرّت أقل من 3 أشهر على آخر تبرع.");
+  if($("e-well").value==="no") why.push("لا تشعر بصحة جيدة اليوم. أجّل التبرع حتى تتعافى.");
+  if($("e-dis").value==="yes") why.push("وجود التهاب كبدي أو إيدز أو مرض مزمن غير مستقر يمنع التبرع.");
+  if($("e-preg").value==="yes") why.push("الحمل والرضاعة يمنعان التبرع مؤقتاً.");
+  $("elig-out").innerHTML = why.length
+    ? `<div class="result bad"><b>غير مؤهل حالياً</b><ul>${why.map(x=>`<li>${x}</li>`).join("")}</ul></div>`
+    : `<div class="result good"><b>أنت مؤهل مبدئياً للتبرع</b><br>توجه إلى أقرب مركز، وسيجري الفريق الطبي الفحص النهائي.<br><button class="btn main" style="margin-top:10px;width:100%" onclick="show('map')">اعرض المراكز القريبة</button></div>`;
+}
+
+/* ============ طلب دم ============ */
+function saveReq(){
+  const r = {
+    id: Date.now(), name:$("r-name").value.trim(), bt:$("r-bt").value, units:+$("r-units").value||1,
+    hosp:$("r-hosp").value.trim(), state:$("r-state").value, urg:$("r-urg").value,
+    phone:$("r-phone").value.trim(), note:$("r-note").value.trim(), date:fmt(new Date())
+  };
+  const err = !r.name ? "اكتب اسم المريض." : !r.hosp ? "اكتب اسم المستشفى." :
+              !phoneOk(r.phone) ? "رقم الهاتف غير صحيح. مثال: 0912345678" : "";
+  $("r-err").textContent = err;
+  if(err) return;
+  const list = load("ld_reqs", []); list.unshift(r); save("ld_reqs", list);
+  ["r-name","r-hosp","r-phone","r-note"].forEach(i=>$(i).value="");
+  toast("تم نشر الطلب"); renderReqs();
+}
+function delReq(id){ save("ld_reqs", load("ld_reqs",[]).filter(r=>r.id!==id)); renderReqs(); renderHome(); }
+function renderReqs(){
+  const l = load("ld_reqs", []);
+  $("req-list").innerHTML = l.length ? l.map(r=>reqCard(r,true)).join("") : '<div class="empty">لم تنشر أي طلب بعد.</div>';
+}
+
+/* ============ المراكز ============ */
+let type = "الكل";
+function buildChips(){
+  const chips = $("chips");
+  ["الكل",...BT].forEach(t => {
+    const b = document.createElement("button");
+    b.className = "chip" + (t===type?" on":""); b.textContent = t;
+    b.onclick = () => { type=t; [...chips.children].forEach(c=>c.classList.toggle("on",c===b)); renderCenters(); };
+    chips.appendChild(b);
+  });
+}
+function centerCard(c){
+  const bts = Object.entries(c.stock).map(([k,v])=>`<span class="bt ${v==="low"?"low":""}">${k}</span>`).join("");
+  const map = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(c.name+" "+c.city);
   return `<article class="card">
     <div class="center-head">
       <div class="cross"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="18" rx="1.5" fill="#c0262d"/><rect x="3" y="9" width="18" height="6" rx="1.5" fill="#c0262d"/></svg></div>
       <div style="flex:1">
         <div class="tags"><span class="tag">${c.city}</span>${c.verified?'<span class="ok">✔ موثق</span>':''}${c.h24?'<span class="hours">● 24 ساعة</span>':''}</div>
-        <div class="name">${c.name}</div>
-        <div class="addr">${c.addr}</div>
+        <div class="name">${c.name}</div><div class="addr">${c.addr}</div>
       </div>
     </div>
-    <div class="stock"><span>الفصائل والصفائح المسجلة حالياً بالمرفق:</span><em>${c.updated}</em></div>
+    <div class="stock"><span>الفصائل المسجلة حالياً بالمرفق:</span><em>${c.updated}</em></div>
     <div class="stock" style="margin-top:0">${bts}</div>
     <div class="btns">
       <a class="btn call" href="tel:${c.phone}">📞 اتصال بالطوارئ</a>
-      <a class="btn dir" href="${map}" target="_blank" rel="noopener">توجيه المسار</a>
+      <a class="btn" href="${map}" target="_blank" rel="noopener">توجيه المسار</a>
+    </div></article>`;
+}
+function renderCenters(){
+  const q=$("q").value.trim(), st=$("state").value;
+  const rows = CENTERS.filter(c => (!st||c.state===st) && (!q||(c.name+c.addr+c.city).includes(q)) && (type==="الكل"||type in c.stock));
+  $("list").innerHTML = rows.length ? rows.map(centerCard).join("") : '<div class="empty">لا توجد مراكز مطابقة. جرّب فصيلة أو ولاية أخرى.</div>';
+}
+function pickState(s){ $("state").value=s; renderCenters(); toast("الولاية: "+s); }
+
+/* ============ بطاقة المتبرع ============ */
+function saveDonor(){
+  const d = { name:$("d-name").value.trim(), bt:$("d-bt").value, state:$("d-state").value, phone:$("d-phone").value.trim(), last:$("d-last").value };
+  const old = load("ld_donor", null);
+  d.id = old ? old.id : "LD-" + Math.random().toString(36).slice(2,8).toUpperCase();
+  const err = d.name.length<3 ? "اكتب اسمك الكامل." : !phoneOk(d.phone) ? "رقم الهاتف غير صحيح. مثال: 0912345678" : "";
+  $("d-err").textContent = err;
+  if(err) return;
+  save("ld_donor", d); toast("تم حفظ البطاقة"); renderCard();
+}
+function delDonor(){ if(confirm("حذف البطاقة من هذا الجهاز؟")){ localStorage.removeItem("ld_donor"); renderCard(); } }
+function editDonor(){ const d=load("ld_donor",null); if(!d) return;
+  $("d-name").value=d.name; $("d-bt").value=d.bt; $("d-state").value=d.state; $("d-phone").value=d.phone; $("d-last").value=d.last||"";
+  $("card-form").style.display="block"; $("card-form").scrollIntoView({behavior:"smooth"}); }
+function renderCard(){
+  const d = load("ld_donor", null);
+  if(!d){ $("card-show").innerHTML=""; $("card-form").style.display="block"; return; }
+  let next = null, can = true;
+  if(d.last){ const n=new Date(d.last); n.setMonth(n.getMonth()+3); next=n; can = n <= new Date(); }
+  $("card-show").innerHTML = `
+    <div class="dcard">
+      <div class="top"><div class="bt-big">${esc(d.bt)}</div><div class="id">${esc(d.id)}</div></div>
+      <h3>${esc(d.name)}</h3>
+      <div class="line">${esc(d.state)} - ${esc(d.phone)}</div>
+      <div class="line">آخر تبرع: ${d.last?esc(d.last):"لم يسجّل بعد"}</div>
+      <span class="badge ${can?"yes":"no"}">${can?"مؤهل للتبرع الآن":"متاح للتبرع بعد "+fmt(next)}</span>
     </div>
-  </article>`;
+    <div class="btns" style="margin-bottom:14px">
+      <button class="btn ghost" onclick="editDonor()">تعديل</button>
+      <button class="btn danger" onclick="delDonor()">حذف</button>
+    </div>`;
+  $("card-form").style.display="none";
 }
 
-function pickState(s){ $("state").value = s; render(); window.scrollTo({top:document.body.scrollHeight*0.3,behavior:"smooth"}); }
-function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),1800); }
-function tab(el,name){
-  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b===el));
-  if(name!=="خريطة المراكز") toast("صفحة «"+name+"» قيد التطوير");
-}
-$("q").addEventListener("input", render);
-$("state").addEventListener("change", render);
-render();
+/* ============ تشغيل ============ */
+fill("state", STATES, "كافة الولايات");
+fill("r-state", STATES); fill("d-state", STATES);
+fill("r-bt", BT); fill("d-bt", BT);
+buildChips();
+$("q").addEventListener("input", renderCenters);
+$("state").addEventListener("change", renderCenters);
+show("home");
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
