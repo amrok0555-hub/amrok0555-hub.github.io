@@ -1,5 +1,5 @@
-const CACHE = "lifedrop-v2";
-const FILES = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const CACHE = "lifedrop-v3";
+const FILES = ["./", "./index.html", "./config.js", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)));
@@ -15,9 +15,10 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-/* الشبكة أولاً (لتصل التحديثات فوراً)، ثم الكاش عند انقطاع الإنترنت */
+/* ملفات موقعنا فقط: الشبكة أولاً ثم الكاش. روابط Firebase و Google تمر مباشرة */
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  if (new URL(e.request.url).origin !== self.location.origin) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
